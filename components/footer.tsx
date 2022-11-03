@@ -1,20 +1,31 @@
-import styles from '../styles/Layout.module.css'
-import Image from 'next/image'
-
-type Props = {
-  children: React.ReactNode
-}
+import styled from '@emotion/styled'
 
 export default function Footer() {
+  const FooterContainer = styled.div`
+    display: flex;
+    flex: 1;
+    padding: 2rem 10rem;
+    justify-content: center;
+    align-items: center;
+
+    > a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+      font-size: 13px;
+    }
+  `
+
   return (
-    <footer className={styles.footer}>
+    <FooterContainer>
       <a
         href="https://goeunwiki.notion.site/66e7c8f9cbea4a5d8a9674866f956f5a"
         target="_blank"
         rel="noopener noreferrer"
       >
-        Powered by goeun
+        ⓒ 2022. goeun jeong. All rights reserved.
       </a>
-    </footer>
+    </FooterContainer>
   )
 }

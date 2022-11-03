@@ -1,54 +1,39 @@
-import { CSSProperties } from 'react'
 import Link from 'next/link'
+import styled from '@emotion/styled'
 
-import styles from '../styles/Layout.module.css'
-
-const navUlStyles: CSSProperties = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-evenly',
-  alignItems: 'center',
-  listStyle: 'none',
-}
-
-const titleStyles: CSSProperties = {
-  textAlign: 'center',
-  fontSize: '30px',
-  marginBottom: '3rem',
-}
+const NAV_LIST = [
+  { path: '/', name: 'Home' },
+  { path: '/about', name: 'About' },
+  { path: '/', name: 'Web' },
+  { path: '/', name: 'Framework' },
+  { path: '/', name: 'Language' },
+  { path: '/', name: 'Network' },
+  { path: '/', name: 'Error Note' },
+  { path: '/', name: 'Etc' },
+]
 
 export default function Header() {
+  const HeaderContainer = styled.header`
+    padding: 2rem 10rem;
+    justify-content: center;
+    align-items: center;
+  `
   return (
-    <header className={styles.header}>
-      <div style={titleStyles}>Goeun's 지식 창고</div>
-      <nav>
-        <ul style={navUlStyles}>
-          <li>
-            <Link href="/">Home</Link>
-          </li>
-          <li>
-            <Link href="/about">About</Link>
-          </li>
-          <li>
-            <Link href="/about">Web</Link>
-          </li>
-          <li>
-            <Link href="/about">Framework</Link>
-          </li>
-          <li>
-            <Link href="/about">Language</Link>
-          </li>
-          <li>
-            <Link href="/about">Network</Link>
-          </li>
-          <li>
-            <Link href="/about">Error Note</Link>
-          </li>
-          <li>
-            <Link href="/about">Etc</Link>
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <HeaderContainer>
+      <div className="flex justify-between">
+        <div className="text-3xl text-center">GoniloG</div>
+        <nav>
+          <ul className="flex items-center m-0 list-none">
+            {NAV_LIST.map(d => {
+              return (
+                <li className="mr-12">
+                  <Link href={d.path}>{d.name}</Link>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
+      </div>
+    </HeaderContainer>
   )
 }
