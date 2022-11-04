@@ -12,12 +12,12 @@ const NAV_LIST = [
   { path: '/', name: 'Etc' },
 ]
 
+const HeaderContainer = styled.header`
+  padding: 2rem 10rem;
+  justify-content: center;
+  align-items: center;
+`
 export default function Header() {
-  const HeaderContainer = styled.header`
-    padding: 2rem 10rem;
-    justify-content: center;
-    align-items: center;
-  `
   return (
     <HeaderContainer>
       <div className="flex justify-between">
