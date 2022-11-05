@@ -23,7 +23,7 @@ export default function Header() {
       <div className="flex justify-between">
         <div className="text-3xl text-center">GoniloG</div>
         <nav>
-          <ul className="flex items-center m-0 list-none">
+          <ul className="flex flex-wrap items-center m-0 list-none">
             {NAV_LIST.map(d => {
               return (
                 <li className="mr-12">

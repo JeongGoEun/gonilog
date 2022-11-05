@@ -20,12 +20,27 @@ a {
   box-sizing: border-box;
 }
 
-/* @media (prefers-color-scheme: light) {
-  html {
+/* Tablet */
+@media screen and (max-width: 1024px) {
+  body {
+    background: rgb(57, 191, 102);
+  } 
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
+  body {
+    background: skyblue;
+  } 
+}
+
+/* Theme */
+@media (prefers-color-scheme: light) {
+  /* html {
     color-scheme: light;
   }
   body {
     color: white;
     background: black;
-  }
-} */
+  } */
+}

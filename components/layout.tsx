@@ -1,13 +1,17 @@
 import Footer from './footer'
 import Header from './header'
 import styled from '@emotion/styled'
+import SubMenu from './sub-menu'
 
 type Props = {
   children: React.ReactNode
 }
 
 const Container = styled.div`
-  padding: 0 10rem;
+  margin: 0 10rem;
+  display: flex;
+  border: #92999c 1px solid;
+  border-radius: 10px;
 `
 
 const Content = styled.main`
@@ -18,8 +22,6 @@ const Content = styled.main`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: #92999c 1px solid;
-  border-radius: 10px;
 `
 
 export default function Layout({ children }: Props) {
@@ -27,6 +29,7 @@ export default function Layout({ children }: Props) {
     <>
       <Header />
       <Container>
+      <SubMenu />
         <Content>{children}</Content>
       </Container>
       <Footer />
