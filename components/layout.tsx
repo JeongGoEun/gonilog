@@ -1,6 +1,8 @@
+import React from 'react'
+import styled from '@emotion/styled'
+
 import Footer from './footer'
 import Header from './header'
-import styled from '@emotion/styled'
 import SubMenu from './sub-menu'
 
 type Props = {
@@ -24,15 +26,17 @@ const Content = styled.main`
   align-items: center;
 `
 
-export default function Layout({ children }: Props) {
+const Layout = ({ children }: Props) => {
   return (
     <>
       <Header />
       <Container>
-      <SubMenu />
+        <SubMenu />
         <Content>{children}</Content>
       </Container>
       <Footer />
     </>
   )
 }
+
+export default Layout

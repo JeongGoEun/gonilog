@@ -15,7 +15,8 @@ const FooterContainer = styled.div`
     font-size: 13px;
   }
 `
-export default function Footer() {
+
+const Footer = () => {
   return (
     <FooterContainer>
       <a
@@ -28,3 +29,5 @@ export default function Footer() {
     </FooterContainer>
   )
 }
+
+export default Footer

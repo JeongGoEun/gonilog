@@ -17,7 +17,7 @@ const HeaderContainer = styled.header`
   justify-content: center;
   align-items: center;
 `
-export default function Header() {
+const Header = () => {
   return (
     <HeaderContainer>
       <div className="flex justify-between">
@@ -26,7 +26,7 @@ export default function Header() {
           <ul className="flex flex-wrap items-center m-0 list-none">
             {NAV_LIST.map(d => {
               return (
-                <li className="mr-12">
+                <li className="mr-12" key={d.name}>
                   <Link href={d.path}>{d.name}</Link>
                 </li>
               )
@@ -37,3 +37,5 @@ export default function Header() {
     </HeaderContainer>
   )
 }
+
+export default Header

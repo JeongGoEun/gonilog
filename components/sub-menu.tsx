@@ -1,11 +1,20 @@
-import styled from '@emotion/styled'
+import { css } from '@emotion/react'
 
-const SubMenuContainer = styled.div`
-`
-export default function SubMenu() {
+const SubMenu = () => {
   return (
-    <SubMenuContainer>
-      서브메뉴 레이아웃
-    </SubMenuContainer>
+    <div
+      className="sub-menu-container"
+      css={css`
+        width: 20%;
+        padding: 2rem;
+        border-right: #92999c 1px solid;
+      `}
+    >
+      <div>검색 영역</div>
+      <div>프로필 영역</div>
+      <div>카테고리 영역</div>
+    </div>
   )
 }
+
+export default SubMenu
