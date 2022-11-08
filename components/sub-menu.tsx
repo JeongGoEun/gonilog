@@ -26,7 +26,7 @@ const SubMenu = () => {
     <div
       className="sub-menu-container"
       css={css`
-        width: 20%;
+        max-width: 30vh;
         padding: 1.5rem;
         border-right: #92999c 1px solid;
       `}
@@ -54,8 +54,7 @@ const SubMenu = () => {
           alt="profile-image"
         />
         <div className="my-4">
-          <div className="mb-2 text-3xl">Just Do it !</div>
-          <div className="text-xl">박치기 전문 개발자, 💻 🐱 ✍️ </div>
+          <div className="text-xl">Interested in FE, ✍️ </div>
         </div>
       </div>
       <div className="category-container">

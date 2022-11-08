@@ -17,13 +17,9 @@ const Container = styled.div`
 `
 
 const Content = styled.main`
+  width: 100%;
   min-height: 100vh;
-  padding: 4rem 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  padding: 1.5rem 0;
 `
 
 const Layout = ({ children }: Props) => {
