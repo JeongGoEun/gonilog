@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 사용자
+model User {
+  id      Int       @id @default(autoincrement())
+  email   String    @unique
+  name    String?
+  isOwner Boolean
+  Comment Comment[]
+}
+
+// 포스트
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  title     String
+  tag       Tag[]
+}
+
+// 태그
+model Tag {
+  id     Int   @id @default(autoincrement())
+  postId Int?
+  Post   Post? @relation(fields: [postId], references: [id])
+
+  name String
+}
+
+// 댓글
+model Comment {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  comment   String
+}
