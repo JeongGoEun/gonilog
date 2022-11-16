@@ -1,3 +1,5 @@
+import { MDXRemote } from 'next-mdx-remote'
+import { serialize } from 'next-mdx-remote/serialize'
 import { groq } from 'next-sanity'
 import IntroCard from '../components/intro-card'
 import TagArea from '../components/tag-area'
@@ -8,11 +10,11 @@ const postQuery = groq`
 `
 
 const Home = ({ data }: any) => {
-  const { post } = data
-  console.log(post)
+  const { post, source } = data
 
   return (
     <>
+      {/* <MDXRemote {...source} /> */}
       <TagArea />
       <IntroCard />
     </>
@@ -22,10 +24,16 @@ const Home = ({ data }: any) => {
 // 빌드시 실행
 // export async function getStaticProps({params: any, preview = false}) {
 export async function getStaticProps() {
+  // use sanity
   const post = await getClient().fetch(postQuery)
+
+  // use mdx
+  const source = 'Some **mdx** text, with a component '
+  const mdxSource = await serialize(source)
+
   return {
     props: {
-      data: { post },
+      data: { post, source: mdxSource },
     },
   }
 }
