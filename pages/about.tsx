@@ -35,19 +35,19 @@ const About = ({ Component, pageProps }: AppProps) => {
     if (type === 'git') {
       window.open('https://github.com/JeongGoEun')
     } else if (type === 'notion') {
-      window.open('https://github.com/JeongGoEun')
-    } else {
       window.open(
         'https://goeunwiki.notion.site/66e7c8f9cbea4a5d8a9674866f956f5a'
       )
+    } else {
+      window.open('https://velog.io/@wjdrhdms002')
     }
   }
 
   return (
     <AboutContaier>
-      <div className="mt-8">
+      <div className="mt-8 min-w-[280px]">
         <Image
-          className="border rounded-full"
+          className="border-4 rounded-full border-[#415f9d]"
           src={profileImg}
           alt="profile-image"
           width={300}
