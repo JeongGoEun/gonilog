@@ -1,39 +1,32 @@
-import { MDXRemote } from 'next-mdx-remote'
-import { serialize } from 'next-mdx-remote/serialize'
-import { groq } from 'next-sanity'
 import IntroCard from '../components/intro-card'
 import TagArea from '../components/tag-area'
-import { getClient } from '../lib/sanity-server'
+import { getAllPosts, PostResData } from '../scripts/utils'
 
-const postQuery = groq`
-  *[_type == "post"]
-`
+interface Props {
+  posts: PostResData
+}
 
-const Home = ({ data }: any) => {
-  const { post, source } = data
+const Home = ({ posts }: Props) => {
+  const categories = posts.map(post => post && post.data.category)
 
   return (
     <>
-      {/* <MDXRemote {...source} /> */}
       <TagArea />
-      <IntroCard />
+      <IntroCard posts={posts} />
     </>
   )
 }
 
-// 빌드시 실행
-// export async function getStaticProps({params: any, preview = false}) {
 export async function getStaticProps() {
-  // use sanity
-  const post = await getClient().fetch(postQuery)
+  // get sanity posts
+  // const sanityPosts = await postUtil.getAllSanityPosts()
 
-  // use mdx
-  const source = 'Some **mdx** text, with a component '
-  const mdxSource = await serialize(source)
+  // get mdx posts
+  const posts = getAllPosts()
 
   return {
     props: {
-      data: { post, source: mdxSource },
+      posts,
     },
   }
 }

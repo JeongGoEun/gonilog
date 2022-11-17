@@ -1,0 +1,109 @@
+---
+title: '[React] context란?'
+category: 'react'
+updated: '2022-11-17'
+---
+
+# Context란?
+
+- 많은 컴포넌트들에게 전달해주는 props(ex. locale, theme..)을 대신해서 쓸 수 있다.
+
+### 장점
+
+- 중간에 있는 엘리먼트들에게 props를 넘겨주지 않아도 됨
+
+### 단점
+
+- 무분별한 사용은 컴포넌트를 재사용하기 어려워짐
+- 만약 하위 컴포넌트들이 많다면 직접 변경하지 않고 state로 끌어올려서 변경하기
+  (그렇지 않으면 하위 모든 컴포넌트들이 rerender된다)
+
+> TIP) props가 여러 레벨에 걸쳐진다면? - [컴포넌트 합성](https://ko.reactjs.org/docs/composition-vs-inheritance.html)을 이용하자
+
+---
+
+# API
+
+### React.createContext
+
+```
+const MyContext = React.createContext(defaultValue);
+```
+
+- Context 객체를 만듬
+- 컴포넌트 렌더링 시 React는 트리 상위에서 **가장 가까이 있는 Provider**에서 값을 얻어옴
+- **defaultValue**는 적절한 Provider를 찾지 못했을 때 쓰이는 값
+
+### Context.Provider
+
+```
+<MyContext.Provider value={contextValue}
+```
+
+- Context 객체에 포함된 컴포넌트
+- context를 구독하는 컴포넌트들에게 변화를 알리는 역할
+- value prop을 받아 하위에 있는 컴포넌트(구독하는 모든 컴포넌트)에게 전달
+
+### Context.Consumer
+
+```
+<MyContext.Consumer>
+	{value => /*context 값을 이용한 렌더링*/}
+</MyContext.Consumer>
+```
+
+- Context의 변화를 구독하는 컴포넌트
+- 함수 컴포넌트 안에서 context를 구독할 수 있다.
+
+### Context.displayName
+
+```
+const MyContext = React.createContext(/* some value */);
+MyContext.displayName = 'MyDisplayName';
+
+<MyContext.Provider> // "MyDisplayName.Provider" in DevTools
+<MyContext.Consumer> // "MyDisplayName.Consumer" in DevTools
+```
+
+- 해당 문자열을 사용해서 context를 어떻게 보여줄지 결정
+
+---
+
+## 하위 컴포넌트에서 context 업데이트 하기
+
+- context를 통해 메서드를 호출하면 됨
+
+theme-context.js
+
+```
+// createContext에 보내는 기본값의 모양을
+// 하위 컴포넌트가 받고 있는 매개변수 모양과 동일하게 만드는 것 잊지마세요!
+export const ThemeContext = React.createContext({
+  theme: themes.dark,
+  toggleTheme: () => {},
+});
+```
+
+theme-toggler-button.js
+
+```
+import {ThemeContext} from './theme-context';
+
+function ThemeTogglerButton() {
+  // ThemeTogglerButton는 context로부터
+  // theme 값과 함께 toggleTheme 매서드도 받고 있습니다.
+  return (
+    <ThemeContext.Consumer>
+      {({theme, toggleTheme}) => (
+        <button
+          onClick={toggleTheme}
+          style={{backgroundColor: theme.background}}>
+          Toggle Theme
+        </button>
+      )}
+    </ThemeContext.Consumer>
+  );
+}
+
+export default ThemeTogglerButton;
+```

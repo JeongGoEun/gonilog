@@ -1,0 +1,105 @@
+---
+title: '[React] recoild 이란?'
+category: 'react'
+updated: '2022-11-17'
+---
+
+# Recoil이란?
+
+> 👉 React를 위한 상태관리 라이브러리
+
+<br />
+<hr />
+
+## Atom
+
+> 상태(state)의 일부를 나타냄
+> 어떤 컴포넌트에서나 읽고 쓸 수 있음
+> atom 값을 읽는 컴포넌트들은 **암묵적으로 atom을** **구독**한다.
+
+    - **변화를 감지**하면, atom을 구독하는 모든 컴포넌트들이 **rerendering**
+
+### atom 선언
+
+```tsx
+const textState = atom<T>({
+  key: 'unique key',
+  default: '',
+})
+```
+
+### atom 사용
+
+```tsx
+function TextInput() {
+	// ~ useRecoilValue(atom key value | selector)
+	const [text, setText] = useRecoilValue(unique_key);
+	const onChange = (e) => setText(e.target.value);
+
+	return ({
+		<div>
+			<input type="text" value={text} onChange={onChange}/>
+			Echo: {text}
+		</div>
+	});
+}
+```
+
+<br />
+<br />
+
+## Selector
+
+> 파생된 상태(derived state)의 일부를 나타냄
+> 파생된 상태는 **상태의 변화**
+> 상태의 변화에 따라 원하는 포맷을 설정하여 가져올 수 있음
+> 일부만 쓰기 가능한 상태(get과 set 속성을 둘다 가지고 있음)
+
+### selector 선언 및 활용
+
+```tsx
+const charCountState = selector({
+  key: 'charCountState',
+  get: ({ get }) => {
+    // ~ get(atom key value)
+    const text = get(unique_key) // 해당 recoil value를 가져옴
+    return text.length
+  },
+})
+
+function CharCounter() {
+  const count = useRecoilValue(charCountState)
+  return <>Char count: {count} </>
+}
+```
+
+<br />
+<br /># Hooks
+
+### useRecoilValue(key)
+
+> atom의 값을 가져오는 hook(getter)
+
+```tsx
+const todoListState = atom({
+  key: 'todoListState',
+  default: [],
+})
+
+function TodoList() {
+  const todoList = useRecoilValue(todoListState)
+
+  return <> ... </>
+}
+```
+
+### useSetRecoilState(key)
+
+> atom의 값 업데이트(setter)
+> 리스트일경우 **updater 형식**을 사용하는점에 유의
+
+```tsx
+const setTodoList = useSetRecoilState(todoListState)
+
+setTodoList(oldTodoList => [...oldTodoList, { newListItem }])
+```
