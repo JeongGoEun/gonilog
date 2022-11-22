@@ -1,28 +1,36 @@
 import { css } from '@emotion/react'
+import styled from '@emotion/styled'
 import Image from 'next/image'
 import Link from 'next/link'
-import { PostData, PostResData } from '../scripts/utils'
+import { PostResData } from '../scripts/utils'
 import reactLogo from '../static/images/react-logo.svg'
 
 interface Props {
   posts: PostResData
 }
 
+const SummaryText = styled.div`
+  height: 3rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+`
+
 const IntroCard = ({ posts }: Props) => {
-  const onClickCard = (post: PostData) => {
-    console.log(post)
+  const getSummaryText = (text: string) => {
+    return text.substring(0, 100).replace(/[#_*~&;![\]`></hrbr\n=\->]/g, '')
   }
   return (
     <div className="inline-grid grid-cols-4 gap-10">
       {posts &&
         posts.map((post, idx) => {
           return (
-            <Link href={`/post/${post.slug}`}>
-              <div
-                className="hover:cursor-pointer"
-                key={`${post?.data.title}-${idx}`}
-                onClick={() => onClickCard(post)}
-              >
+            <div
+              className="hover:cursor-pointer"
+              key={`${post?.data.title}-${idx}`}
+            >
+              <Link href={`/post/${post.slug}`}>
                 <div className="bg-white rounded">
                   <Image
                     src={reactLogo}
@@ -36,15 +44,7 @@ const IntroCard = ({ posts }: Props) => {
                   />
                 </div>
                 <div className="my-1 text-lg font-bold">{`${post?.data.title}`}</div>
-                <div
-                  css={css`
-                    height: 3rem;
-                    overflow: hidden;
-                    display: -webkit-box;
-                    -webkit-box-orient: vertical;
-                    -webkit-line-clamp: 2;
-                  `}
-                >{`${post?.content}`}</div>
+                <SummaryText>{getSummaryText(post?.content)}</SummaryText>
                 <div className="flex justify-between mt-2">
                   <div
                     css={css`
@@ -53,8 +53,8 @@ const IntroCard = ({ posts }: Props) => {
                   >{`#${post?.data.category}`}</div>
                   <div>{`${post?.data.updated}`}</div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           )
         })}
     </div>

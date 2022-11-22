@@ -21,6 +21,10 @@ a {
   box-sizing: border-box;
 }
 
+.post-slug {
+  all: revert;
+}
+
 /* Tablet */
 @media screen and (max-width: 1024px) {
   body {

@@ -11,7 +11,7 @@ const Container = styled.div`
   margin: 0 10rem;
 `
 
-const Content = styled.main`
+const Content = styled.div`
   width: 100%;
   min-height: 100vh;
 `

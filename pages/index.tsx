@@ -31,16 +31,4 @@ export async function getStaticProps() {
   }
 }
 
-// 동적 라우팅 + getStaticProps - post 만들때 유용할듯
-// export async function getStaticPaths() {
-//   const paths = await getClient().fetch(
-//     groq`*[_type == "post" && defined(slug.current)][].slug.current`
-//   )
-
-//   return {
-//     paths: paths.map((slug) => ({params: {slug}})),
-//     fallback: true,
-//   }
-// }
-
 export default Home
