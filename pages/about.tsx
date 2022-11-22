@@ -52,6 +52,7 @@ const About = ({ Component, pageProps }: AppProps) => {
           alt="profile-image"
           width={300}
           height={300}
+          loading={'lazy'}
         />
       </div>
 

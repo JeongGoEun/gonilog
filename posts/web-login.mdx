@@ -1,0 +1,147 @@
+---
+title: '[Web] 로그인은 어떻게 할까?'
+category: 'web'
+updated: '2022-11-17'
+---
+
+프론트를 다룬다면 항상 다루는 **로그인**!
+에 대해서 보다 자세하고 깊게 알고싶어 써보는 벨로그 시작,,,,,!🧐
+
+---
+
+# 로그인 필수 개념 3가지
+
+## 프로토콜: http
+
+#### 프로토콜 특성
+
+<비연결성(Connectionless), 비상태성(Stateless)> 라는 특징 때문에 **쿠키와 세션이 필요**
+
+모든 사용자는 요청이 끝난 후 연결이 해제되면서 상태 정보를 저장하지 않음
+=> 매번 들어올 때 마다 새로운 사람으로 인식이 되면서 서버의 자원 낭비를 발생
+
+즉, 서버를 대신해서 필요한 정보들을 웹 브라우저에 저장하여 현재 사용자의 요청 시 함께 보내서 서버가 특정 사용자를 식별할 수 있게 해준다.
+
+---
+
+## [쿠키](https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Set-Cookie): Cookie
+
+#### 쿠키를 사용하는 목적은 크게 세가지
+
+1. 세션 관리(Session Management)
+   로그인, 사용자 닉네임, 접속 시간 등 서버가 식별할 수 있는 정보들을 저장
+
+2. 개인화(Personalization)
+   사용자에게 맞춰진 페이지를 보여줌
+
+3. 트래킹(Trcking)
+   사용자의 행동 패턴을 분석하고 기록
+
+#### 쿠키 개념 간단 정리
+
+- 서버가 사용자를 식별하기 위해 웹 브라우저에 저장하는 데이터
+- { Key: Value } 쌍으로 구성되고 String 형식으로만 이루어져 있음
+- 최대 4KB 저장 가능
+- 브라우저별로 쿠키는 다르게 인식 됨(익스 쿠키 !== 크롬 쿠키)
+
+#### 사용 방법
+
+- Server -> User : Set-Cookie
+
+```
+Set-Cookie: <cookie-name>=<cookie value>
+```
+
+- User -> Server : 이후 request진행 시 Header에 Cookie로 전달
+
+```
+Cookie: <cookie-name>=<cookie value>
+```
+
+---
+
+Example)
+**request**
+{...}
+
+**response**
+
+```
+HTTP/1.0 200 OK
+Content-type: text/html
+Set-Cookie: id=hazzimozzi
+Set-Cookie: name=zzidoong
+```
+
+**request**
+
+```
+GET /sample_page.html HTTP/1.1
+Host: www.velog.io
+Cookie: id=hazzimozzi; name=zzidoong
+```
+
+---
+
+#### 쿠키 종류
+
+1. Session 쿠키
+   웹 브라우저가 종료될 때 제거되는 쿠키
+
+2. Permanent 쿠키
+   웹 브라우저가 종료되더라도 제거되지 않는 쿠키
+
+- 기존 Set-Cookie에 **Expires, Max-Age** 옵션을 추가
+  Expires(date): 쿠키 만료 날짜, Max-Age(number): 현재 시간 기점 유지되는 시간
+- 우선 순위: Expires < Max-Age
+
+```
+Set-Cookie: id=hazzimozzi; Expires=<date>, 7 Feb 1996 02:08:00 GMT;
+```
+
+#### 쿠키 옵션
+
+1. Secure: https 프로토콜 사용 시 전송(암호화된 요청일 때)
+2. HttpOnly: Cross-site scripting 공격 방지(document.cookie API 접근 불가)
+3. Domain: 쿠키의 스코프 정의(도메인 기점 서브 도메인까지 포함)
+4. Path: 쿠키 헤더 보내기 전 리소스에 있어야하는 URL 경로(하위 디렉토리까지 포함)
+
+#### 쿠키 용도 예제
+
+1. ID저장 및 로그인 상태 유지
+2. N일간 다시 보지 않기
+3. 최근 본 상품, 장바구니 ...
+
+---
+
+## 세션: Session
+
+쿠키...만 사용하면.... 쿠키가 만약에 노출된다면?
+은 보안상 매우 문제가 된다.
+
+그래서 나온것이 세션!
+
+#### 세션 개념 간단 정리
+
+- 사용자의 식별자로 쓰이는 **JSESSIONID(session id)**를 쿠키에 저장
+  - jsessionid: 세션을 유지하기 위해 발급하는 키
+- jsessionid를 가져와서 서버에 저장된 인증 정보를 확인
+  => 보안상 필요한 정보는 서버에 저장하고 고유 키를 발급하여 사용자를 식별
+
+#### 세션 동작 순서
+
+1: Client) 첫 request를 보냄
+2: Server) ssid에 해당하는 쿠키 값이 없으니 새로 발급하고 응답에 포함
+3: Client) 발급 받은 ssid를 request header에 항상 포함
+4: Server) ssid를 확인하여 사용자 식별
+5: Client) 로그인 요청
+6: Server) 해당 세션을 로그인 한 사용자 정보로 갱신 후 새로운 ssid 발급
+6: Client) 로그인 된 사용자의 ssid 전달
+7: Client) 종료 시 ssid제거
+8: Server) 종료 시 세션 제거
+
+#### 세션 특징
+
+- ssid는 브라우저 단위로 저장되며 종료 시 소멸
+- 로그인, 로그아웃 등 세션 단위로 새로운 세션이 만들어지는 것(로그인만 세션이 만들어지는게 아님)
+- 필요한 정보들을 세션에 담아두면 작은 DB 형태로도 사용할 수 있다

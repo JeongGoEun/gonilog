@@ -1,0 +1,100 @@
+---
+title: '[JS] 모듈화'
+category: 'js'
+updated: '2022-04-12'
+---
+
+### 항상 쓰면서 모듈화에서 거의 항상(?) 쓰이는 index.js를 다른 프로젝트에서 참조하기만 해서 공부도 할 겸 정리를 해보려고 한다!
+
+# index.js
+
+프로젝트, 개발자마다 참조하는 방식이 달라서 이해하지 않고 복붙하기 바빴다.
+많은 index.js 파일을 만들고 써왔지만, 정작 이해하지않고 썼다는게 어느 순간 머리가 띵한 느낌이 들었다.
+오늘 정리하면서 검색하지 않고 참조하는 습관을 길러야겠다!
+
+#### Q. export 할 때 중괄호를 언제 써야할까?
+
+- default 키워드가 추가 된 변수, 함수, 클래스는 중괄호 없이 식별이 가능하다.
+  ** 주의할 점 : 한 파일에서 export default 키워드는 오직 한 개만 존재해야 한다!**
+
+#### 1. 변수 자체를 export
+
+```
+// @components/index.js
+export const EXPORT_VARIABLE = {}
+
+// App.js
+import { EXPORT_VARIABLE } from '@components'
+```
+
+#### 2. 컴포넌트들을 하나의 변수로 묶어 export
+
+```
+// @components/index.js
+import IMPORT_COMP1 from '/import_comp_path'
+import IMPORT_COMP2 from '/import_comp_path'
+
+const Comp = { IMPORT_COMP1, IMPORT_COMP2}
+
+export default Comp
+
+// App.js
+import Comp from '@components'
+
+Comp.IMPORT_COMP1
+```
+
+#### 3. 별칭을 만들어서 export
+
+```
+// @components/index.js
+export { IMPORT_COMP1 as COMP1 } from './import_comp_path'
+export { IMPORT_COMP2 as COMP2 } from './import_comp_path'
+
+//  App.js
+import { COMP1, COMP2 } from '@components'
+```
+
+#### 4. 여러개를 export 할 때
+
+```
+// @components/index.js
+export { IMPORT_COMP1 as default, IMPORT_COMP2 };
+
+//  App.js
+import IMPORT_COMP, { IMPORT_COMP2 } from '@components'
+```
+
+#### 번외) ES6에서 defualt 사용하기
+
+```
+# exportExample.js
+
+// 방법 1
+function exam1 = () => { console.log('exam1 func') }
+
+// 방법2
+export function exam2 = () => { console.log('exam2') }
+
+export { exam1 };
+
+
+
+# imortExample.js
+import { exam1, exam2 } from '/exportExample'
+import * as exam from '/exportExample'
+
+exam.exam1();
+
+```
+
+사실 그렇게 큰 차이는 없어서 프로젝트에서 쓰는 컨벤션을 따르면 될 것 같다.
+
+그래도 각 프로젝트마다 달라서 헷갈렸는데 이제야 정리가 되는 기분이다.
+
+사이드 프로젝트에서는
+
+Page: export default(Default exports)
+Module: export(Named exports)
+
+이렇게 사용해서 써야겠다!

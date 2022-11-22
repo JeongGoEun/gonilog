@@ -1,0 +1,99 @@
+---
+title: '[React] Redux?'
+category: 'react'
+updated: '2022-04-02'
+---
+
+[Redux 공식 문서](https://ko.redux.js.org/)
+
+### Redux 란?
+
+redux는 react에서 가장 많이 사용되는 상태라이브러리
+
+#### 왜 많이쓰이는가?
+
+컴포넌트의 상태 관련 로직을 파일로 분리시켜 **효율적으로 관리**할 수 있기 때문
+최근 Redux Toolkit이 등장하면서 더욱 많이 쓰이고 있음
+
+#### redux 규칙
+
+- store는 무조건 하나만 존재
+- state는 읽기 전용
+- state의 변경은 dispatch 함수를 통해 가능
+- reducer는 순수 함수로만 구성
+
+### redux 기본 용어
+
+#### 1. Action
+
+- 트리를 변경하는 방법을 서술한 객체
+- 상태를 바로 변경하지 않고 action 객체를 통해 일어날 변경을 명시
+- type 필드를 반드시 명시해야 함
+
+```
+{
+	type: 'ADD_COUNT',	# Required
+    data: {
+    	id: 1,
+        text: 'example'
+    }
+}
+```
+
+#### 2. Action Creator
+
+- action 객체를 만들어주는 함수
+
+```
+const addCount = (data) => {
+	return { type: 'ADD_COUNT', data };
+}
+```
+
+#### 3. Reducer
+
+- 현재 상태와 action 객체를 받아, 필요하다면 새로운 상태를 반환하는 함수
+- (prev state, action) => new state
+
+```
+const initialState = 0;
+
+function counter(state = initialState, action){
+	switch(action.type) {
+    	case 'ADD_COUNT': return state + 1;
+        case 'SUB_COUNT': return state - 1;
+        default: return state;
+    }
+}
+```
+
+#### 4. Store
+
+- 앱의 모든 state가 저장되는 하나의 저장소
+- reducer에서 데이터 변화를 확인하고 상태값을 변경
+
+```
+import { createStore } from 'redux';
+
+const store = createStore(counter);
+```
+
+#### 5. Dispatch
+
+- store의 내장 함수
+- 전달 받은 action 객체를 통해 상태를 업데이트 하는 유일한 방법
+- 내부 상태를 바꾸는 유일한 방법 : action 객체 보내기
+
+```
+store.dispatch({ type: 'ADD_COUNT' });
+```
+
+#### 6. Subscribe
+
+- store의 내장 함수
+- 상태 변화에 따라 rerendering 할 수 있음
+- 일종의 이벤트 리스너
+
+```
+store.subscribe(() => console.log(store.getState()));
+```

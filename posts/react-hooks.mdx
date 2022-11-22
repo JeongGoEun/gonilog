@@ -1,0 +1,178 @@
+---
+title: '[React] hooks'
+category: 'react'
+updated: '2022-03-14'
+---
+
+### 훅은 왜쓰는가?
+
+> 서로 비슷한 것을 하는 작은 함수의 묶음으로 사용 가능
+> 함수 컴포넌트에서 React state와 생명주기 기능을 연동(hook into)할 수 있게 해주는 함수
+
+#### 훅 사용 규칙
+
+1. 최상위에서만 Hook을 호출해야 한다.(반복문, 조건문, 중첩 함수 내에선 안됨)
+2. React 함수 컴포넌트 내에서만 호출(JS 함수 에서 호출하면 안됨, 예외: custom Hook)
+   (linter 제공 : https://www.npmjs.com/package/eslint-plugin-react-hooks)
+
+### useState
+
+- 현재의 state와 해당 state를 업데이트 하는 함수를 쌍으로 제공
+- this.setState와 유사하지만, 이전 state와 새로운 state를 합치지 않는다.
+
+### useEffect
+
+- 함수 컴포넌트 내에서 side effects를 수행할 수 있도록 도와준다
+- useEffect = componentDidMount, componentDidUpdate,
+- useEffect를 사용하면, React는 DOM을 바꾼 뒤에 'effect'함수를 실행한다
+- Effects는 컴포넌트 안에 선언되어 있기 때문에 props와 state에 접근 가능하다.
+- 기본적으로 React는 매 렌더링 이후에 effects를 실행한다(첫번재 렌더링 포함)
+- 만약 effect를 해제할 필요가 있다면? 해제하는 함수는 반환 (optional)
+
+```
+useEffect (() => {
+	// Rerender Component
+	console.log('dooing something');
+    return () => {
+    	// Unmount Component
+    	console.log('effect done');
+    }
+}
+```
+
+### useContext
+
+- context객체를 받아 그 context의 현재 값을 반환
+- context의 현재 값은 트리에서 hook을 호출하는 가장 가까운 Provider의 value prop에 의해 결정
+- 가장 가까운 Provider가 갱신되면 해당 hook은 전달된 가장 최신의 context value를 사용하여 트리거한다.
+  \*\* useContext로 전달한 인자는 context 객체
+
+### useReducer
+
+- useState의 대체 함수
+
+```
+const [state, dispatch] = useReducer(reducer, inintialArg, init);
+const [state, dispatch] = useReducer(reducer, {count: initialArg});
+```
+
+- state, action => new State의 형태로 reducer를 받고 dispatch 메서드와 짝의 형태를 가진 현재 state를 반환한다.
+- 이전 state에 의존적일 경우에 보통 useReducer를 더 선호한다.
+
+```
+const initialState = {count: 0};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return {count: state.count + 1};
+    case 'decrement':
+      return {count: state.count - 1};
+    default:
+      throw new Error();
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  return (
+    <>
+      Count: {state.count}
+      <button onClick={() => dispatch({type: 'decrement'})}>-</button>
+      <button onClick={() => dispatch({type: 'increment'})}>+</button>
+    </>
+  );
+}
+```
+
+- initialState를 지연해서 생성할 수 도 있음
+  => init함수를 세번째 인자로 전달 : reducer 외부에서 초기 state를 계산하는 로직 추출
+
+```
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return {count: state.count + 1};
+    case 'decrement':
+      return {count: state.count - 1};
+    case 'reset':
+      return init(action.payload);
+    default:
+      throw new Error();
+  }
+}
+
+function Counter({initialCount}) {
+  const [state, dispatch] = useReducer(reducer, initialCount, init);
+  return (
+    <>
+      Count: {state.count}
+      <button
+        onClick={() => dispatch({type: 'reset', payload: initialCount})}>
+        Reset
+      </button>
+      <button onClick={() => dispatch({type: 'decrement'})}>-</button>
+      <button onClick={() => dispatch({type: 'increment'})}>+</button>
+    </>
+  );
+}
+
+```
+
+### useCallback
+
+- 메모이제이션된 콜백을 반환한다
+- 콜백의 의존성이 변경되었을 때에만 변경 => 불필요한 렌더링 방지
+
+### useRef
+
+- .current 프로퍼티로 전달된 인자로 초기화 된 ref 객체를 반환
+
+### Custom hooks
+
+필요한 hook들을 정의해서 커스텀 훅을 만들 수 있다
+
+```
+function useFriendStatus(friendID) {
+  const [isOnline, setIsOnline] = useState(null);
+
+  function handleStatusChange(status) {
+    setIsOnline(status.isOnline);
+  }
+
+  useEffect(() => {
+    ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
+    };
+  });
+
+  return isOnline;
+}
+```
+
+- 여러 컴포넌트에서 사용하기
+
+```
+function FriendStatus(props) {
+  const isOnline = useFriendStatus(props.friend.id);
+
+  if (isOnline === null) {
+    return 'Loading...';
+  }
+  return isOnline ? 'Online' : 'Offline';
+}
+
+function FriendListItem(props) {
+  const isOnline = useFriendStatus(props.friend.id);
+
+  return (
+    <li style={{ color: isOnline ? 'green' : 'black' }}>
+      {props.friend.name}
+    </li>
+  );
+}
+
+```
+
+- 각 컴포넌트의 state는 완전 독립적

@@ -1,0 +1,79 @@
+---
+title: '[FE 성능 최적화] Lighthouse'
+category: 'fe'
+updated: '2022-11-21'
+---
+
+# Light house란?
+
+Google Lighthouse는 웹페이지 품질을 측정하기 위한 자동화된 오픈 소스 도구
+
+![](https://velog.velcdn.com/images/wjdrhdms002/post/2e043c5e-0938-4bc3-be1f-0b3b97aa3796/image.png)
+
+## Mode와 Categories항목 값
+
+![](https://velog.velcdn.com/images/wjdrhdms002/post/e9087bc6-5c56-4c4d-a928-a9c61aa6acd9/image.png)
+
+### Mode
+
+- Navigation: Lighthouse의 기본값, **초기 페이지 로딩 시 발생하는 성능** 문제 분석
+- Timespan: 사용자가 **정의한 시간동안 발생한 성능** 문제 분석
+- Snapshot: **현재 상태의 성능** 문제 분석
+
+### Categories
+
+- Performance: 웹 페이지의 **로딩 과정**에서 발생하는 성능 문제 분석
+- Accessibility: 서비스의 **사용자 접근성** 문제 분석
+- Best practices: 웹사이트의 **보안 측면**과 웹 개발의 **최신 표준**에 중점을 둔 분석
+- SEO: 검색 엔진에서 얼마나 잘 **크롤링** 되고 **검색 결과**에 표시되는지 분석
+- Progressive Web App: 서비스 워커와 오프라인 동작, **PWA와 관련된 문제** 분석
+
+## Lighthouse의 검사 결과
+
+![](https://velog.velcdn.com/images/wjdrhdms002/post/8f2ee9c4-cec0-4351-8fe4-349f5d3bd6bf/image.png)
+
+#### First Contentful Paint(FCP)
+
+- 페이지가 로드될 때 브라우저가 **DOM 콘텐츠의 첫번째 부분**을 렌더링 하는 데 걸린 시간
+- 10%의 가중치를 가짐
+
+#### Speed Index(SI)
+
+- 콘텐츠가 **시각적으로 표시되는 속도**
+- 10%의 가중치를 가짐
+
+#### Largest Contentful Paint(LCP)
+
+- 화면 내에 있는 **가장 큰 이미지나 텍스트 요소가 렌더링** 되기까지 걸리는 시간
+- 25%의 가중치를 가짐
+
+#### Time To Interactive(TTI)
+
+- 사용자가 페이지와 **상호작용이 가능한 시점**까지 걸리는 시간
+- 10%의 가중치를 가짐
+
+#### Total Blocking Time(TBT)
+
+- 페이지가 클릭, 키보드 입력 등의 **사용자 입력에 응답하지 않도록 차단된 시간**
+- FCP와 TTI 사이의 시간동안 발생
+- 메인 스레드를 독점하여 다른 동작을 방해하는 작업에 걸린 시간의 총합
+- 30%의 가중치를 가짐
+
+#### Cumulatice Layout Shift(CLS)
+
+- 페이지 로드 과정에서 발생하는 **예기치 못한 레이아웃 이동을 측정**한 지표
+- 15%의 가중치를 가짐
+
+#### Opportunities 섹션
+
+- 페이지를 빨리 로드하는데 잠재적으로 **도움이 되는 제안**들의 나열
+
+#### Diagnostics 섹션
+
+- 로드 속도와 직접적인 관계는 없지만 **성능과 관련된 기타 정보**
+
+#### 검사 환경
+
+- Emulated-CPU throttling: CPU 성능을 어느정도 제한하여 검사를 진행했는지
+  (1x: 성능에 제한 두지 않음, 4x: 4배로 제한을 둠 - 모바일일 경우)
+- Custom-Network throttling: 네트워크 속도를 제한하여 고정된 네트워크 환경에서 측정!

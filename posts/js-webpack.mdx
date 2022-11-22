@@ -1,0 +1,182 @@
+---
+title: '[JS] 웹팩(Webpack)'
+category: 'js'
+updated: '2022-04-25'
+---
+
+# Webpack
+
+## 웹팩(webpack)이란
+
+> 프로젝트에 있는 수많은 js 파일을 하나의 파일로 묶어 네트워크 비용을 최소화해주는 것
+> 즉, **흩어져있는 파일들을 확장자별로 번들링** 해주는 것
+
+## webpack.config.js 구성요소
+
+### Entry
+
+> default: ./src/index.js
+> 다른 모듈을 사용하는 최상위 js파일을 명시해주는 속성
+
+#### config와 js 파일 설정
+
+```
+// webpack.config.js
+module.exports = {
+  entry: './script.js'  //
+};
+
+// script.js
+const message = document.createTextNode('example');
+document.body.appendChild(message); // 간단한 문자열 표시
+```
+
+#### webpack 커맨드 실행
+
+```
+npx webpack
+```
+
+### Output
+
+> 웹팩에서 번들링 된 결과의 경로를 설정하는 속성(위의 예제에선 main.js의 위치 지정)
+> 상대경로가 아닌 절대경로로 설정해야 한다.
+
+#### 경로 설정
+
+config 파일 수정 후, 실행하면 프로젝트 최상위 디렉토리에 build.js 파일이 생성된다.
+
+```
+// webpack.config.js
+module.exports = {
+  entry: './script.js',
+  output: {
+    path: __dirname,  // 현재 프로젝트의 root 디렉토리
+    filename: 'build.js'
+  }
+};
+```
+
+#### html 참조
+
+build.js를 참조하도록 index.html 작성 후 확인하면, 위에서 설정한 'exam'텍스트가 보인다.
+
+```
+// index.html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Webpack Example</title>
+  </head>
+  <body>
+    <script src="./build.js"></script>
+  </body>
+</html>
+```
+
+### Loader
+
+> js 뿐만 아니라, css, image, jsx, ts 등 다양한 종류의 파일을 함께 번들링하도록 지원해주는 속성
+> 웹팩의 핵심이라 생각해도 될 것 같다.
+
+가장 기본이 되는 css파일을 예시로 보자
+
+#### 1. style-loader, css-loader 설치
+
+```
+// style.css
+body {
+  color: red;
+}
+```
+
+```
+$ npm i style-loader css-loader
+```
+
+#### 2. script.js 파일 수정
+
+- css 파일 임포트(절대 경로로 import)
+
+```
+// script.js
+import './style.css'
+
+const message = document.createTextNode('example');
+document.body.appendChild(message); // 간단한 문자열 표시
+```
+
+#### 3. webpack.config.js 파일 수정
+
+- 해당 css파일을 로더에 의해 처리될 수 있도록 설정
+- module 속성 추가 후, rules 속성으로 규칙을 등록한다.
+- test 항목에서 정의된 정규식에 해당되는 파일은 use 항목에 등록된 로더에 의해 처리된다.
+
+```
+// webpack.config.js
+module.exports = {
+  entry: './script.js',
+  output: {
+    path: __dirname,  // 현재 프로젝트의 root 디렉토리
+    filename: 'build.js'
+  },
+  module: {
+    rules: [
+      {
+        test: '\/.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  }
+};
+```
+
+#### 4. 웹팩 실행
+
+- body에 스타일이 적용된 것을 확인할 수 있다.
+
+거의 모든 파일에 해당하는 로더 패키지를 제공하고 있다.
+
+### Plugin
+
+> 로더로 설정이 애매한 부분들을 커버할 수 있다.
+
+예시로, clean-webpack-plugin 플러그인(웹팩 실행 시 기존 번들 파일 지워줌)을 설치해보자
+
+#### 1. clean-webpack-plugin 설치
+
+```
+$ npm i -D clean-webpack-plugin
+```
+
+#### 2. webpack.config.js 파일 수정
+
+설치한 플러그인을 임포트 한 후, plugins 속성에 해당 플러그인을 추가한다.
+
+```
+// webpack.config.js
+module.exports = {
+  entry: './script.js',
+  output: {
+    path: __dirname,  // 현재 프로젝트의 root 디렉토리
+    filename: 'build.js'
+  },
+  module: {
+    rules: [
+      {
+        test: '\/.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  },
+  plugins: [
+    new CleanWebPackPlugin('build.js')
+  ]
+};
+```
+
+#### 3. 웹팩 실행
+
+build.js파일이 지워졌다 다시 생성된다.
+
+참고 포스팅 https://www.daleseo.com/webpack-config/

@@ -1,0 +1,60 @@
+---
+title: '[JS] babel'
+category: 'js'
+updated: '2022-07-28'
+---
+
+# babel이란?
+
+> 자바스크립트 컴파일러 => js로 결과물을 만들어주는 트랜스컴파일러
+
+Q. 근데 js는 인터프리터 언어인데 컴파일러가 필요한가?
+
+- 컴파일러: high level의 언어를 기계어로 번역하여 출력
+- 인터프리터: 각 행을 high level에서 중간코드로 즉각 변환->실행
+
+즉, *컴파일러*는 **전체 소스를 파악하여 번역**을 진행하지만, *인터프리터*는 각 행을 연속적으로 번역**텍스트**하여 실행
+
+## babel은 왜 필요할까?
+
+- 고레벨 언어를 기계로 번역하는게 아닌, js로 결과물을 만들어주는 컴파일러이기 때문
+- 새로운 문법(ES6 - 신기능)이나 ts, jsx 처럼 다른 언어로 분류되는 언어들에 대해서도 모든 브라우저에서 동작할 수 있도록 호환성을 지켜줌
+- 모든 브라우저에서 작동되는 하위버전의 js 언어(ES5 - 구기능)로 변환된다는 뜻
+- 빠르게 발전하는 프론트엔드와 문법들을 지원하기 위해 필수
+
+```
+// current - ES6
+const add = (a, b) => a + b;
+
+// after babel - ES5
+function add(a, b) { return a + b; }
+
+```
+
+## babel 동작 단계
+
+1. 파싱(parsing): 코드를 읽고 추상 구문 트리로 변환 - babel
+2. 변환(transforming): 추상 구문 트리를 변경 - babel plugin(어떤 코드를 어떻게 변환할지에 대한 규칙 정의)
+3. 출력(printing): 변경된 결과물 출력 - babel
+
+즉, 바벨은 js 코드를 받아 AST를 만들고, 해당 트리를 활용하여 새로운 js 코드를 출력한다.
+
+## babel-polyfill
+
+### polyfill이란?
+
+> - 개발자가 특정 기능이 지원되지 않는 브라우저를 위해 사용할 수 있는 코드 조각이나 플러그인
+
+- 지원하지 않는 기능들에 대한 호환성 작업을 채워 넣는다 하여 polyfill이라 칭함
+
+Q. babel만 있으면 되는데 왜 babel-polyfill이 필요할까
+
+- babel은 문법만 변환시켜주는 역할이고, polyfill은 프로그램이 시작될 때 지원하지 않는 기능들을 추가
+  => babel의 실행 시점은 컴파일, babel-polyfill의 실행 시점은 런타임
+  ex)
+  ES5에 존재하지 않는 ES6의 Map, Primise, Set, Object들은 존재하지 않아 번역이 불가 => babel-polyfill이 번역 가능하도록 지원
+
+참고
+https://lihano.tistory.com/20
+https://velog.io/@dbsbest10/Webpack-%EA%B3%BC-Babel%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%BC%EA%B9%8C
+https://born-dev.tistory.com/33
