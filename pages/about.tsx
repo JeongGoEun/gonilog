@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import type { AppProps } from 'next/app'
 import Image from 'next/image'
 import profileImg from '../static/images/profile-img.jpeg'
+import { PROFILE_URL } from '../constants/constant'
 
 const AboutContaier = styled.div`
   display: flex;
@@ -32,15 +33,9 @@ const About = ({ Component, pageProps }: AppProps) => {
     `https://img.shields.io/badge/${name}-${color}?style=for-the-badge&logo=${name}&logoColor=white`
 
   const openPage = (type: 'git' | 'notion' | 'velog') => {
-    if (type === 'git') {
-      window.open('https://github.com/JeongGoEun')
-    } else if (type === 'notion') {
-      window.open(
-        'https://goeunwiki.notion.site/66e7c8f9cbea4a5d8a9674866f956f5a'
-      )
-    } else {
-      window.open('https://velog.io/@wjdrhdms002')
-    }
+    if (type === 'git') window.open(PROFILE_URL.git)
+    else if (type === 'notion') window.open(PROFILE_URL.notion)
+    else PROFILE_URL.velog
   }
 
   return (

@@ -1,6 +1,7 @@
 import IntroCard from '../components/intro-card'
 import TagArea from '../components/tag-area'
-import { getAllPosts, PostResData } from '../scripts/utils'
+import { getAllPosts } from '../scripts/utils'
+import { PostResData } from './api/model/post-model'
 
 interface Props {
   posts: PostResData

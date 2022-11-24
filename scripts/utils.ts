@@ -1,19 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import { INTRO_IMAGE_PATH } from '../constants/constant'
+import { TagType } from '../pages/api/model/post-model'
 
-export interface PostData {
-  data: {
-    [key: string]: string
-  }
-  content: string
-  slug: string
-}
-
-export type PostResData = PostData[]
+const POST_PATH = 'posts'
 
 export const getAllPosts = () => {
-  const dirFiles = fs.readdirSync(path.join(process.cwd(), 'posts'), {
+  const dirFiles = fs.readdirSync(path.join(process.cwd(), POST_PATH), {
     withFileTypes: true,
   })
 
@@ -22,7 +16,7 @@ export const getAllPosts = () => {
       if (!file.name.endsWith('.mdx')) return
 
       const fileContent = fs.readFileSync(
-        path.join(process.cwd(), 'posts', file.name),
+        path.join(process.cwd(), POST_PATH, file.name),
         'utf-8'
       )
       const { data, content } = matter(fileContent)
@@ -36,7 +30,7 @@ export const getAllPosts = () => {
 }
 
 export const getAllPostSlugs = () => {
-  const fileNames = fs.readdirSync(path.join(process.cwd(), 'posts'))
+  const fileNames = fs.readdirSync(path.join(process.cwd(), POST_PATH))
 
   const slugs = fileNames.map(fileName => {
     return { params: { slug: fileName.replace(/.mdx$/, '') } }
@@ -46,7 +40,7 @@ export const getAllPostSlugs = () => {
 }
 
 export const getPostData = (slug: string) => {
-  const filePath = path.join(process.cwd(), `posts/${slug}.mdx`)
+  const filePath = path.join(process.cwd(), `${POST_PATH}/${slug}.mdx`)
   const fileContent = fs.readFileSync(filePath, 'utf-8')
   const { data, content } = matter(fileContent)
 
@@ -55,3 +49,8 @@ export const getPostData = (slug: string) => {
     ...{ data, content },
   }
 }
+
+export const getPlainText = (mdxText: string) =>
+  mdxText.substring(0, 100).replace(/[#_*~&;![\]`></hrbr\n=\->]/g, '')
+
+export const getIntroImage = (tag: TagType) => INTRO_IMAGE_PATH[tag]

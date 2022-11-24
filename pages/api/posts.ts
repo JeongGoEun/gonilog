@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getAllPosts, PostData } from '../../scripts/utils'
+import { getAllPosts } from '../../scripts/utils'
+import { PostData } from './model/post-model'
 
 export default function handler(
   req: NextApiRequest,

@@ -1,7 +1,8 @@
-import { getAllPostSlugs, getPostData, PostData } from '../../scripts/utils'
+import styled from '@emotion/styled'
+import { getAllPostSlugs, getPostData } from '../../scripts/utils'
 import { serialize } from 'next-mdx-remote/serialize'
 import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote'
-import styled from '@emotion/styled'
+import { PostData } from '../api/model/post-model'
 
 interface Props {
   post: PostData
