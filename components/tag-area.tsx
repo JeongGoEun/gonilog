@@ -1,28 +1,19 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 interface TagType {
-  name: string
-  cnt: number
+  name: string;
+  cnt: number;
 }
 
-const tagDummy: Array<TagType> = [
-  { name: 'Web', cnt: 1 },
-  { name: 'Vue', cnt: 1 },
-  { name: 'Typescript', cnt: 1 },
-  { name: 'Javascript', cnt: 1 },
-  { name: 'Network', cnt: 1 },
-  { name: '회고', cnt: 1 },
-  { name: '에러', cnt: 1 },
-  { name: 'cors', cnt: 1 },
-  { name: 'Recoil', cnt: 1 },
-  { name: 'css', cnt: 1 },
-]
+interface Props {
+  category: TagType[];
+}
 
 const TagAreaContainer = styled.div`
   margin-bottom: 3rem;
   display: flex;
   flex: 1;
   flex-wrap: wrap;
-`
+`;
 
 const Tag = styled.div`
   margin-right: 1rem;
@@ -36,18 +27,18 @@ const Tag = styled.div`
   :hover {
     background-color: #eff0f4;
   }
-`
+`;
 
-const TagArea = () => {
+const TagArea = ({ category }: Props) => {
   return (
     <TagAreaContainer>
-      {tagDummy.map(d => {
+      {category.map((d) => {
         return (
           <Tag key={`category-list-${d.name}`}>{`${d.name} (${d.cnt})`}</Tag>
-        )
+        );
       })}
     </TagAreaContainer>
-  )
-}
+  );
+};
 
-export default TagArea
+export default TagArea;
